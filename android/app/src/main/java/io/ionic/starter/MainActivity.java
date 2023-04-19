@@ -8,12 +8,11 @@ import com.microsoft.appcenter.crashes.Crashes;
 
 public class MainActivity extends BridgeActivity {
 
-     @Override
-     public void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
-
-        AppCenter.start(getApplication(), "eaed1aa8-2aff-4dcf-ad80-c827619590e2",
+    @Override
+    protected void loadApp(String appKey) {
+      AppCenter.start(getApplication(), "eaed1aa8-2aff-4dcf-ad80-c827619590e2",
             Analytics.class, Crashes.class);
-     }
+      super.loadApp(appKey);
+    }
 
 }
