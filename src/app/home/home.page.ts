@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
+import { PhotoService } from '../services/photo.service';
+
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -9,5 +12,10 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule],
 })
 export class HomePage {
-  constructor() {}
+  constructor(public photoService: PhotoService) {}
+
+  addPhotoToGallery() {
+    this.photoService.addNewToGallery();
+  }
+
 }
