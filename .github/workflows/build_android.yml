@@ -26,9 +26,9 @@ jobs:
           npm install -g @angular/cli
       - name: Ionic Build & Sync
         run: |
-          ionic build --prod
-          ionic cap copy
-          ionic cap sync
+          npm run build --prod
+          npx cap copy
+          npx cap sync
       - name: Setup java
         uses: actions/setup-java@v3
         with:
