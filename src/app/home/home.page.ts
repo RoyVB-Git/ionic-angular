@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 import { PhotoService } from '../services/photo.service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -9,13 +10,18 @@ import { PhotoService } from '../services/photo.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonicModule, CommonModule],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   constructor(public photoService: PhotoService) {}
+
+  async ngOnInit() {
+    await this.photoService.loadSaved();
+  }
 
   addPhotoToGallery() {
     this.photoService.addNewToGallery();
   }
 
 }
+
