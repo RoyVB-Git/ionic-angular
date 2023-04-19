@@ -22,6 +22,8 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
+          npm install -g @ionic/cli
+          npm install -g @angular/cli
       - name: Ionic Build & Sync
         run: |
           ionic build --prod
