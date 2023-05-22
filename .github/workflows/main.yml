@@ -1,4 +1,4 @@
-name: Release apk
+name: Build and release Android package to Appcenter
 
 on:
   push:
@@ -66,7 +66,7 @@ jobs:
       - name: upload artefact to App Center
         uses: wzieba/AppCenter-Github-Action@v1
         with:
-          appName: Bee-Ideas/Museum-Slager-Visitor
+          appName: ${{secrets.APP_CENTER_NAME}}
           token: ${{secrets.APP_CENTER_TOKEN}}
           group: Collaborators
           file: ./android/app/build/outputs/apk/release/app-release-signed.apk
