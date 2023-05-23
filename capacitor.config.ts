@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.ionic.app',
-  appName: 'App',
+  appId: 'com.ionic-angular.app',
+  appName: 'app',
   webDir: 'dist',
   bundledWebRuntime: false
 };
