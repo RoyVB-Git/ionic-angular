@@ -1,5 +1,5 @@
 {
-  "name": "ionic",
+  "name": "app",
   "integrations": {
     "capacitor": {}
   },
