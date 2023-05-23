@@ -1,0 +1,76 @@
+name: Build $(Date:yyyy).$(DayOfYear).$(Rev:r)
+
+trigger:
+  branches:
+    include:
+      - develop
+  paths:
+    include:
+      - android
+
+pool:
+  vmImage: 'macos-latest'
+
+jobs:
+  - job: build
+    displayName: Build
+    steps:
+      - task: Npm@1
+        displayName: Install packages
+        inputs:
+          command: install
+          workingDir: .
+          verbose: true
+
+      - task: Npm@1
+        displayName: Install Capacitor CLI
+        inputs:
+          command: custom
+          workingDir: .
+          verbose: true
+          customCommand: run install -g capacitor
+
+      - task: Npm@1
+        displayName: Build with configuration production
+        inputs:
+          command: custom
+          workingDir: .
+          verbose: true
+          customCommand: run build -- --configuration=production --verbose=true --progress=true
+
+      - name: Run Capacitor pre build commands
+        run: |
+          cap update
+          cap copy
+          cap sync
+
+      - name: Make gradlew executable
+        run: cd ./android/ && chmod +x ./gradlew
+
+#      - name: Run Gradle build
+#        run: cd ./android/ && ./gradlew build
+
+      - task: Gradle@2
+        displayName: Run Gradle build
+        inputs:
+          gradleWrapperFile: '$(Build.Repository.LocalPath)/android/gradlew'
+          workingDirectory: '$(Build.Repository.LocalPath)/android/'
+          tasks: 'clean build test assembleRelease assembleDebug assembleAndroidTest'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.11'
+          gradleOptions: '-Xmx3072m'
+          sonarQubeRunAnalysis: false
+
+      - task: CopyFiles@2
+        displayName: Copy artifacts to $(build.artifactstagingdirectory)/App
+        inputs:
+          sourceFolder: ./dist
+          targetFolder: $(build.artifactstagingdirectory)/App
+
+      - task: PublishBuildArtifacts@1
+        displayName: Publish artifacts
+        inputs:
+          pathtoPublish: $(build.artifactstagingdirectory)/App
+          artifactName: App
