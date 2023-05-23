@@ -1,6 +1,27 @@
 version: 2.1
+
+orbs:
+  node: circleci/node@5.1.0
+
 jobs:
-  e2e:
+  npm-build:
+    working_directory: .
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Build Angular application
+          command: npm run build-prod
+      - run:
+          name: Update Capacitor
+          command: npx cap update
+      - run:
+          name: Sync spa with android source code
+          command: npx cap sync && npx cap copy
+  
+  android-e2e:
     working_directory: ./android
     docker:
       - image: circleci/android:api-25-alpha
@@ -12,7 +33,7 @@ jobs:
          name: Chmod permissions
          command: sudo chmod +x ./gradlew
 
-  gradle:
+  gradle-build:
     working_directory: ./android
     docker:
       - image: 'cimg/openjdk:11.0'
@@ -26,3 +47,15 @@ jobs:
       - run:    
           name: Run Gradle build command
           command: ./gradlew build
+  echo:
+    working_directory: .
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          command: echo hello world
+
+workflows:
+  build-workflow:
+    jobs:
+      - echo
